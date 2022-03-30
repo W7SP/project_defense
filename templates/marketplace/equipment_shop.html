@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<body>
+<h1>Improve your physique with our equipment</h1>
+
+<div class="expenses-container">
+        {% for equipment in equipments %}
+            <div class="expense-container">
+            <h2>{{ equipment.name }}</h2>
+            <p>{{ equipment.description }}</p>
+            <div class="expense-detail">
+                <div>
+                    <p>Price: {{ equipment.price|floatformat:2 }}$</p>
+                </div>
+                <div class="right">
+                    <a class="button edit" href="{% url 'buy equipment' equipment.pk %}">Buy</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+</div>
+
+
+</body>
+{% endblock %}

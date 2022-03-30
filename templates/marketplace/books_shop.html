@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<body>
+<h1>Learn from the best study books</h1>
+<div class="expenses-container">
+        {% for book in books %}
+            <div class="expense-container">
+            <h2>{{ book.name }}</h2>
+                <p>{{ book.author }}</p>
+            <p>{{ book.description }}</p>
+            <div class="expense-detail">
+                <div>
+                    <p>Price: {{ book.price|floatformat:2 }}$</p>
+                </div>
+                <div class="right">
+                    <a class="button edit" href="{% url 'buy book' book.pk %}">Buy</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+</div>
+
+
+</body>
+{% endblock %}

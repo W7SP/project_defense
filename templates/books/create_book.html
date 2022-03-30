@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>ListBook</title>
+</head>
+<body>
+<form method="POST" action="{% url 'create book'%}">
+    {{ form }}
+    {% csrf_token %}
+    <button>Create</button>
+</form>
+
+</body>
+{% endblock %}

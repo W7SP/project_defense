@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<body>
+<form method="post" action="{% url 'buy equipment'  object.pk %}">
+    {{ form }}
+    {% csrf_token %}
+    <button>Buy</button>
+</form>
+
+</body>
+{% endblock %}

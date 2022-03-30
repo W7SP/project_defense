@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <title>Omnia</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+<div id="box">
+    <header>
+        <section class="navigation">
+        <p><a href="{% url 'index' %}" class="w3-button" >Omnia</a></p>
+            <nav>
+                <ul>
+                    {% if not request.user.is_authenticated %}
+                        <li><a href="{% url 'register user' %}" class="w3-button" >Register</a></li>
+                        <li><a href="{% url 'login user' %}" class="w3-button" >Login</a></li>
+                    {% else %}
+                        <li></li>
+                        <div class="w3-dropdown-hover">
+                            <button class="w3-button">MarketPlace</button>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="{% url 'courses shop' %}" class="w3-bar-item w3-button">Courses</a>
+                                <a href="{% url 'equipment shop' %}" class="w3-bar-item w3-button">Equipment</a>
+                                <a href="{% url "book shop" %}" class="w3-bar-item w3-button">StudyBooks</a>
+                            </div>
+                        </div>
+                        <div class="w3-dropdown-hover">
+                            <button class="w3-button">AddNewListings</button>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="{% url 'create course' %}" class="w3-bar-item w3-button">CreateCourse</a>
+                                <a href="{% url 'create equipment' %}" class="w3-bar-item w3-button">ListEquipment</a>
+                                <a href="{% url 'create book' %}" class="w3-bar-item w3-button">AddBook</a>
+                            </div>
+                        </div>
+                        <div class="w3-dropdown-hover">
+                            <button class="w3-button">PostWall</button>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="{% url 'create post' %}" class="w3-bar-item w3-button">CreatePost</a>
+                                <a href="{% url 'show all posts' %}" class="w3-bar-item w3-button">ShowAll</a>
+                            </div>
+                        </div>
+                        <div class="w3-dropdown-hover">
+                            <button class="w3-button">Profile</button>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="{% url 'profile details' request.user.id %}" class="w3-bar-item w3-button">My Info</a>
+                                <a href="{% url "user's courses" %}" class="w3-bar-item w3-button">MyCourses</a>
+                                <a href="{% url "user's products" %}" class="w3-bar-item w3-button">MyProducts</a>
+                                <a href="{% url "user's listings" %}" class="w3-bar-item w3-button">MyListings</a>
+                                <a href="{% url 'logout user' %}" class="w3-bar-item w3-button">Logout</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </ul>
+            </nav>
+        </section>
+    </header>
+    {% block page_content %}
+        <body></body>
+    {% endblock %}
+    <footer>
+        <div>
+            &copy;Stankov Projects 2022. All rights reserved.
+        </div>
+        <a href="{% url 'about us' %}">About</a>
+        <a href="{% url 'contact us' %}">Contact Us <i class="fa fa-envelope-o" style="font-size:15px"></i></a>
+    </footer>
+</div>
+</body>

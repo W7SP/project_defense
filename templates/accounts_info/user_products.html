@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<h1>My Products</h1>
+<div class="expenses-container">
+        <h2>My Equipment</h2>
+        {% for equipment in equipments %}
+            <div class="expense-container">
+            <h2>{{ equipment.name }}</h2>
+                <p>Description: {{ equipment.description }}</p>
+                <p>Warranty: {{ equipment.warranty }} years</p>
+                <div class="right">
+                </div>
+        </div>
+        {% endfor %}
+
+        <h2>My Books</h2>
+        {% for book in books %}
+            <div class="expense-container">
+            <h2>{{ book.name }}</h2>
+                <p>Description: {{ book.description }}</p>
+                <p>Author: {{ book.author.name }}</p>
+                <div class="right">
+                </div>
+        </div>
+        {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div class="expenses-container">
+        <h2>My Listed Equipment</h2>
+        {% for equipment in equipments %}
+            <div class="expense-container">
+            <h2>{{ equipment.name }}</h2>
+                <p>Description: {{ equipment.description }}</p>
+                <p>Warranty: {{ equipment.warranty }} years</p>
+                <div class="right">
+                    <a class="button edit" href="{% url 'edit equipment' equipment.pk %}">Edit</a>
+                    <a class="button delete" href="{% url 'delete equipment' equipment.pk %}">Delete</a>
+                </div>
+        </div>
+        {% endfor %}
+
+        <h2>My Books</h2>
+        {% for book in books %}
+            <div class="expense-container">
+            <h2>{{ book.name }}</h2>
+                <p>Description: {{ book.description }}</p>
+                <p>Author: {{ book.author.name }}</p>
+                <div class="right">
+                    <a class="button edit" href="{% url 'edit book' book.pk %}">Edit</a>
+                    <a class="button delete" href="{% url 'delete book' book.pk %}">Delete</a>
+                </div>
+        </div>
+        {% endfor %}
+        <h2>My Listed Course</h2>
+        {% for course in courses %}
+            <div class="expense-container">
+            <h2>{{ course.name }}</h2>
+                <p>Description: {{ course.description }}</p>
+                <p>Coach: {{ course.coach.name }} years</p>
+                <div class="right">
+                    <a class="button edit" href="{% url 'edit course' course.pk %}">Edit</a>
+                    <a class="button delete" href="{% url 'delete course' course.pk %}">Delete</a>
+                </div>
+        </div>
+        {% endfor %}
+</div>
+{% endblock %}

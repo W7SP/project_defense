@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<body>
+<h1>PostWall</h1>
+<div class="expenses-container">
+        {% for post in posts %}
+            <div class="expense-container">
+            <h3>{{ post.title }}</h3>
+            <img src="{{ post.picture }}">
+                    <p>{{ post.description }}</p>
+                    <p>{{ post.likes }}</p>
+                    <p>{{ post.dislikes }}</p>
+                <p>{{ post.people_who_liked }}</p>
+                <p>{{ post.people_who_disliked }}</p>
+                    <a class="button like" href="{% url 'like post' post.pk %}">Like</a>
+                    <a class="button like" href="{% url 'dislike post' post.pk %}">Dislike</a>
+                </div>
+            </div>
+        {% endfor %}
+
+
+</body>
+{% endblock %}

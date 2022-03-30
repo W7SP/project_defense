@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>EditPost</title>
+</head>
+<body>
+<form method="POST" action="{% url 'edit post' object.pk %}">
+    {{ form }}
+    {% csrf_token %}
+    <button>Edit</button>
+</form>
+
+</body>
+{% endblock %}

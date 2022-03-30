@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>CreatePost</title>
+</head>
+<body>
+<form method="POST" action="{% url 'create post'%}">
+    {{ form }}
+    {% csrf_token %}
+    <button>Create</button>
+</form>
+
+</body>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>DeletePost</title>
+</head>
+<body>
+<form method="POST" action="{% url 'delete post' object.pk %}">
+    {{ form }}
+    {% csrf_token %}
+    <button>Delete</button>
+</form>
+
+</body>
+{% endblock %}

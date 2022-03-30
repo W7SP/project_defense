@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>ProfileDetails</title>
+</head>
+
+<body>
+        <h1>Welcome {{ profile.first_name }}</h1>
+        <p><a href="{% url 'delete user' request.user.pk %}">DeleteUser</a></p>
+        <p><a href="{% url 'edit user' request.user.pk %}">EditUser</a></p>
+        <p><a href="{% url 'change password' request.user.pk %}">ChangePassword</a></p>
+
+</body>
+{% endblock %}
