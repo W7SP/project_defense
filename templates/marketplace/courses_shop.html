@@ -1,27 +1,33 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
+<head>
+    <meta charset="UTF-8">
+    <title>ProfileDetails</title>
+    <link rel="stylesheet" href="{% static 'css/details.css' %}">
+</head>
 <body>
 <h1>Pick your favourite course</h1>
-<div class="expenses-container">
-        {% for course in courses %}
-            <div class="expense-container">
-            <h2>{{ course.name }}</h2>
-            <img src="{{ course.picture }}">
-                {% if course.description %}
-                    <p>{{ course.description }}</p>
-                {% endif %}
-            <div class="expense-detail">
-                <div>
-                    <p>Price: {{ course.price|floatformat:2 }}$</p>
-                </div>
-                <div class="right">
-                    <a class="button edit" href="{% url 'buy course' course.pk %}">Buy</a>
+<div class="row">
+{% for course in courses %}
+        <div class="column">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="{{ course.picture }}" alt="Avatar" style="width:300px;height:300px;">
+                        <h1>{{ course.name }}</h1>
+                        <p class="price">${{ course.price }}</p>
+                        <p>{{ course.coach }}</p>
+                        <p><button>Buy</button></p>
+                    </div>
+                    <div class="flip-card-back">
+                      <p>{{ course.description }}</p>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+{% endfor %}
 </div>
-
 
 </body>
 {% endblock %}

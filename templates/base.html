@@ -4,13 +4,13 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     <meta charset="UTF-8">
     <title>Omnia</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
-<div id="box">
+{#<div id="box">#}
     <header>
         <section class="navigation">
         <p><a href="{% url 'index' %}" class="w3-button" >Omnia</a></p>
@@ -59,15 +59,16 @@
             </nav>
         </section>
     </header>
-    {% block page_content %}
-        <body></body>
-    {% endblock %}
+    <div class="pagecontent">
+        {% block page_content %}
+        {% endblock %}
+    </div>
+{#</div>#}
     <footer>
         <div>
             &copy;Stankov Projects 2022. All rights reserved.
+            <a href="{% url 'about us' %}">About</a>
+            <a href="{% url 'contact us' %}">Contact Us <i class="fa fa-envelope-o" style="font-size:15px"></i></a>
         </div>
-        <a href="{% url 'about us' %}">About</a>
-        <a href="{% url 'contact us' %}">Contact Us <i class="fa fa-envelope-o" style="font-size:15px"></i></a>
     </footer>
-</div>
 </body>

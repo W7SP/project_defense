@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
     <title>ProfileDetails</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 </head>
-
 <body>
-        <h1>Welcome {{ profile.first_name }}</h1>
-        <p><a href="{% url 'delete user' request.user.pk %}">DeleteUser</a></p>
-        <p><a href="{% url 'edit user' request.user.pk %}">EditUser</a></p>
-        <p><a href="{% url 'change password' request.user.pk %}">ChangePassword</a></p>
-
-</body>
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <img src="{{ profile.picture }}" alt="Avatar" style="width:400px;height:400px;">
+    </div>
+    <div class="flip-card-back">
+      <h1>{{ profile.full_name }}</h1>
+      <p>Architect & Engineer</p>
+        <div class="btn-group">
+            <a class="mya" href="{% url 'edit user' request.user.pk %}">EditUser</a>
+            <a class="mya" href="{% url 'delete user' request.user.pk %}">DeleteUser</a>
+            <a class="mya" href="{% url 'change password' request.user.pk %}">ChangePassword</a>
+        </div>
+    </div>
+  </div>
+</div>
+    <div class="helptext">
+        <h1>Edit Your Account</h1>
+    </div>
+    </body>
 {% endblock %}

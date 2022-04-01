@@ -10,7 +10,7 @@ from final_project.main.views.generic_views import RedirectToIndexView
 # Create New Course (requires Trainer's permissions)
 class CreateCourseView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Courses
-    fields = ('name', 'price', 'description', 'duration',)
+    fields = ('name', 'price', 'description', 'duration', 'picture',)
     template_name = 'courses/create_course.html'
     success_url = reverse_lazy('index')
 
