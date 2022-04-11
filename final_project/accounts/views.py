@@ -68,13 +68,12 @@ class ProfileDetailsView(LoginRequiredMixin, views.DetailView):
         job = 'user'
         if self.request.user.is_superuser:
             job = 'Site Admin'
-        elif self.request.user.has_perm('main.add_studybook'):
+        elif self.request.user.groups.filter(name='Authors').exists():
             job = 'Author'
-        elif self.request.user.has_perm('main.add_course'):
+        elif self.request.user.groups.filter(name='Coach').exists():
             job = 'Coach'
-        elif self.request.user.has_perm('main.add_equipment'):
+        elif self.request.user.groups.filter(name='Trainers').exists():
             job = 'Trainer'
-
         context.update({
             'job': job,
         })

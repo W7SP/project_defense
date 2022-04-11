@@ -2,7 +2,7 @@ from datetime import date
 
 from django import test as django_test
 from django.contrib.auth import get_user_model
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 
 from final_project.accounts.models import Profile
 from final_project.main.models import Courses
@@ -40,43 +40,47 @@ class ProfileCoursesViewTests(django_test.TestCase):
         return UserModel.objects.create_user(**credentials)
 
     def __create_valid_user_and_profile(self):
-        valid_user = self.__create_user(**self.VALID_USER_CREDENTIALS)
+        user = self.__create_user(**self.VALID_USER_CREDENTIALS)
         profile = Profile.objects.create(
             **self.VALID_PROFILE_DATA,
-            user=valid_user,
+            user=user,
         )
 
-        return valid_user, profile
-
-    def __add__participants_to_course(self, course, profile):
-        course.participants.add(profile)
-        course.save()
-        return course
+        return user, profile
 
     def __get_response_for_profile(self):
         return self.client.get(reverse('user\'s courses'))
 
-    # CHECK IF VIEW SHOWS COURSES THE USER HAS BOUGHT
-    def test_view_shows_courses_user_has_bought(self):
-        user = self.__create_user(**self.VALID_USER_CREDENTIALS)
-        profile = Profile.objects.create(**self.VALID_PROFILE_DATA,
-                                         user=user)
+    def __add__coach_and_participants_to_course(self, user, profile):
         course = Courses.objects.create(**self.VALID_COURSE_DATA,
                                         coach=user)
 
         course.participants.add(profile)
         course.save()
+        return course
+
+    # CHECK IF VIEW IS ACCESSED ONLY BY LOGGED-IN USER
+    def test_when_opening_with_logged_in_user__expect_200(self):
+        _, profile = self.__create_valid_user_and_profile()
+        self.client.login(**self.VALID_USER_CREDENTIALS)
+        response = self.__get_response_for_profile()
+
+        self.assertEqual(200, response.status_code)
+
+    # CHECK IF VIEW DOESN'T LOAD WITHOUT A LOGGED-IN USER
+    def test_when_opening_without_logged_in_user_or_with_wrong_user__expect_302(self):
+        response = self.__get_response_for_profile()
+
+        self.assertEqual(302, response.status_code)
+
+    # CHECK IF VIEW SHOWS COURSES THE USER HAS BOUGHT
+    def test_view_shows_courses_user_has_bought(self):
+        user, profile = self.__create_valid_user_and_profile()
+        self.client.login(**self.VALID_USER_CREDENTIALS)
+
+        self.__add__coach_and_participants_to_course(user, profile)
 
         response = self.__get_response_for_profile()
-        check = response.context
-        print(check)
+        current_participants = response.context['object_list'][0].participants
 
-        self.assertEqual(profile, course.participants.first())
-
-
-
-    # def test_view_renders_correct_template(self):
-    #     response = self.client.get('/accounts/user/courses/')
-    #     print(response['location'])
-    #     print(response)
-    #     self.assertTemplateUsed(response, self.EXPECTED_TEMPLATE)
+        self.assertEqual(profile, current_participants.first())
