@@ -2,13 +2,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.courseheading {
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+}
+
 .column {
   float: left;
   width: 25%;
   padding: 0 10px;
 }
-
-/*.row {margin: 0 -5px;}*/
 
 .row:after {
   content: "";
@@ -16,12 +20,6 @@ body {
   clear: both;
   width: 25%;
 }
-
-
-/*.title {*/
-/*  color: grey;*/
-/*  font-size: 18px;*/
-/*}*/
 
 .flip-card {
   background-color: transparent;
@@ -75,6 +73,34 @@ button {
   cursor: pointer;
   width: 100%;
   font-size: 18px;
+}
+
+.buybutton {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+  margin-top: 336px;
+}
+
+.deletepost {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #fd013c;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+  margin-top: 202px;
 }
 
 a {

@@ -9,7 +9,7 @@ from final_project.main.models import Equipment
 # Create New Equipment (requires some permissions)
 class CreateEquipmentView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Equipment
-    fields = ('name', 'price', 'description', 'warranty',)
+    fields = ('name', 'price', 'description', 'picture', 'warranty',)
     template_name = 'equipment/create_equipment.html'
     success_url = reverse_lazy('index')
 
@@ -32,7 +32,8 @@ class EditEquipmentView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.change_equipment'):
+        current_equipment = self.get_object()
+        if not self.request.user.has_perm('main.change_equipment') or not current_equipment.seller.id == self.request.user.id:
             return HttpResponse('You must be the trainer to edit the equipment!')
 
         return super(EditEquipmentView, self).dispatch(request, *args, **kwargs)
@@ -46,7 +47,8 @@ class DeleteEquipmentView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.delete_equipment'):
+        current_equipment = self.get_object()
+        if not self.request.user.has_perm('main.delete_equipment') or not current_equipment.seller.id == self.request.user.id:
             return HttpResponse('You must be the trainer to delete the equipment!')
 
         return super(DeleteEquipmentView, self).dispatch(request, *args, **kwargs)

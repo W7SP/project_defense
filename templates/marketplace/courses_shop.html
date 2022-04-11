@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/details.css' %}">
 </head>
 <body>
-<h1>Pick your favourite course</h1>
+<h1 class="courseheading">Pick your favourite course</h1>
 <div class="row">
 {% for course in courses %}
         <div class="column">
@@ -18,10 +18,12 @@
                         <h1>{{ course.name }}</h1>
                         <p class="price">${{ course.price }}</p>
                         <p>{{ course.coach }}</p>
-                        <p><button>Buy</button></p>
+                        <p><button>INFO</button></p>
                     </div>
                     <div class="flip-card-back">
+                        <h2>Description:</h2>
                       <p>{{ course.description }}</p>
+                        <a href="{% url 'buy course' course.pk %}" class="buybutton" >BUY</a>
                     </div>
                 </div>
             </div>

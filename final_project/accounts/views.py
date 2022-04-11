@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import redirect
 
 from final_project.accounts.forms import UserRegistrationForm
 from django.contrib.auth import views as auth_views
@@ -41,14 +42,14 @@ class UserLogoutView(auth_views.LogoutView):
 
 
 # Delete User
-class DeleteUserView(views.DeleteView):
+class DeleteUserView(LoginRequiredMixin, views.DeleteView):
     model = AppUser
     template_name = 'auth_accounts/delete_user.html'
     success_url = reverse_lazy('index')
 
 
 # Edit User Profile Info
-class EditUserView(views.UpdateView):
+class EditUserView(LoginRequiredMixin, views.UpdateView):
     model = Profile
     fields = ('first_name', 'last_name', 'picture', 'date_of_birth', 'gender',)
     template_name = 'auth_accounts/edit_user.html'
@@ -64,11 +65,31 @@ class ProfileDetailsView(LoginRequiredMixin, views.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['hide_additional_nav_items'] = True
+        job = 'user'
+        if self.request.user.is_superuser:
+            job = 'Site Admin'
+        elif self.request.user.has_perm('main.add_studybook'):
+            job = 'Author'
+        elif self.request.user.has_perm('main.add_course'):
+            job = 'Coach'
+        elif self.request.user.has_perm('main.add_equipment'):
+            job = 'Trainer'
+
+        context.update({
+            'job': job,
+        })
+
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.id == kwargs['pk']:
+            return redirect('index')
+
+        return super(ProfileDetailsView, self).dispatch(request, *args, **kwargs)
 
 
 # Show all courses that the User has bought
-class UsersCoursesView(views.ListView):
+class UsersCoursesView(LoginRequiredMixin, views.ListView):
     model = Courses
     template_name = 'accounts_info/user_courses.html'
     context_object_name = 'courses'
@@ -80,10 +101,16 @@ class UsersCoursesView(views.ListView):
 
 
 # Show all products that the User has bought
-class UsersProductsView(views.ListView):
+class UsersProductsView(LoginRequiredMixin, views.ListView):
     model = Equipment
     template_name = 'accounts_info/user_products.html'
     context_object_name = 'equipments'
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+
+        equipments = list(Equipment.objects.filter(owners=user_id))
+        return equipments
 
     def get_context_data(self, **kwargs):
         user_id = self.request.user.id
@@ -93,15 +120,9 @@ class UsersProductsView(views.ListView):
         })
         return context
 
-    def get_queryset(self):
-        user_id = self.request.user.id
-
-        equipments = list(Equipment.objects.filter(owners=user_id))
-        return equipments
-
 
 # Show user's bought products of the market
-class UsersListingsView(views.ListView):
+class UsersListingsView(LoginRequiredMixin, views.ListView):
     model = Equipment
     template_name = 'accounts_info/user_listings.html'
     context_object_name = 'equipments'
@@ -124,7 +145,7 @@ class UsersListingsView(views.ListView):
 
 
 # Change User Password
-class ChangePasswordView(PasswordChangeView):
+class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy("index")
     template_name = "auth_accounts/password_change.html"

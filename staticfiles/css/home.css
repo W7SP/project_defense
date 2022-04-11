@@ -2,7 +2,7 @@
 
 
 body {
-    background-image: url('/static/images/test_2.jpg');
+    background-image: url('/static/images/back_6.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     font-family: "Lato", serif;
@@ -47,9 +47,23 @@ footer {
     margin: 0;
    height:70px;   /* Height of the footer */
    background: #171a1e;
-    display: block;
+    display: flex;
     text-align: center;
 }
 .pagecontent {
     min-height: 700px;
 }
+
+.ImageContainer {
+    padding-left: 400px;
+    /*background-image: url('/static/images/back_6.jpg'), url('/static/images/Logo_4.gif');*/
+    background-blend-mode: lighten;
+}
+
+/*img {*/
+/*    padding: 500px;*/
+/*    position: center;*/
+/*}*/
+/*@keyframes example {*/
+
+/*}*/

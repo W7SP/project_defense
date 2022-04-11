@@ -9,7 +9,7 @@ from final_project.main.models import StudyBook
 # Create New Book (requires Author's permissions)
 class CreateBookView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = StudyBook
-    fields = ('name', 'price', 'description',)
+    fields = ('name', 'price', 'cover', 'description',)
     template_name = 'books/create_book.html'
     success_url = reverse_lazy('index')
 
@@ -32,7 +32,8 @@ class EditBookView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.change_studybook'):
+        current_book = self.get_object()
+        if not self.request.user.has_perm('main.change_studybook') or not current_book.author.id == self.request.user.id:
             return HttpResponse('You must be the author to edit the book!')
 
         return super(EditBookView, self).dispatch(request, *args, **kwargs)
@@ -46,7 +47,8 @@ class DeleteBookView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.delete_studybook'):
+        current_book = self.get_object()
+        if not self.request.user.has_perm('main.delete_studybook') or not current_book.author.id == self.request.user.id:
             return HttpResponse('You must be the author to delete the book!')
 
         return super(DeleteBookView, self).dispatch(request, *args, **kwargs)

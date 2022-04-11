@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<form method="POST" action="{% url 'login user' %}">
-    {{ form }}
-    {% csrf_token %}
-    <button>Login</button>
-</form>
 
+<form method="POST" action="{% url 'login user' %}">
+  <div class="imgcontainer">
+    <img src="{% static 'images/prof_image.png' %}" alt="Avatar" class="avatar">
+  </div>
+
+  <div class="container">
+    {{ form }}
+      {% csrf_token %}
+
+    <button type="submit">Login</button>
+    <label>
+      <input type="checkbox" checked="checked" name="remember"> Remember me
+    </label>
+  </div>
+</form>
 </body>
 {% endblock %}

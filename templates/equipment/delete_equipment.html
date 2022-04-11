@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
     <title>DeleteEquipment</title>
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
 </head>
 <body>
+<h1 class="courseheading">Are you sure you want to delete equipment "{{ object.name }}" from the MarketPlace?</h1>
 <form method="POST" action="{% url 'delete equipment' object.pk %}">
     {{ form }}
     {% csrf_token %}

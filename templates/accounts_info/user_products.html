@@ -1,27 +1,40 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
-<h1>My Products</h1>
-<div class="expenses-container">
-        <h2>My Equipment</h2>
-        {% for equipment in equipments %}
-            <div class="expense-container">
-            <h2>{{ equipment.name }}</h2>
-                <p>Description: {{ equipment.description }}</p>
-                <p>Warranty: {{ equipment.warranty }} years</p>
-                <div class="right">
-                </div>
-        </div>
-        {% endfor %}
-
-        <h2>My Books</h2>
-        {% for book in books %}
-            <div class="expense-container">
-            <h2>{{ book.name }}</h2>
-                <p>Description: {{ book.description }}</p>
-                <p>Author: {{ book.author.name }}</p>
-                <div class="right">
-                </div>
-        </div>
-        {% endfor %}
+        <head>
+    <title>MyProducts</title>
+        <link rel="stylesheet" href="{% static 'css/user_products.css' %}">
+    </head>
+<h1 class="courseheading">My Products</h1>
+    <h2>My Equipment</h2>
+<div class="container">
+{% for equipment in equipments %}
+  <div class="card">
+    <div class="box">
+      <div class="content">
+        <h2>Equipment</h2>
+        <h3>{{ equipment.name }}</h3>
+        <p>{{ equipment.description }}</p>
+      </div>
+    </div>
+  </div>
+{% endfor %}
 </div>
+
+<h2 class="booksh2">My Books</h2>
+<div class="container">
+{% for book in books %}
+  <div class="card">
+    <div class="box">
+      <div class="content">
+        <h2>Book</h2>
+        <h3>{{ book.name }}</h3>
+        <p>{{ book.description }}</p>
+        <a href="{{ book.link_to_online_book }}">Start Reading</a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
 {% endblock %}

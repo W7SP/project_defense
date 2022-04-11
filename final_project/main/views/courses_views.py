@@ -10,7 +10,7 @@ from final_project.main.views.generic_views import RedirectToIndexView
 # Create New Course (requires Trainer's permissions)
 class CreateCourseView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Courses
-    fields = ('name', 'price', 'description', 'duration', 'picture',)
+    fields = ('name', 'price', 'description', 'duration', 'picture', 'link_to_platform',)
     template_name = 'courses/create_course.html'
     success_url = reverse_lazy('index')
 
@@ -33,7 +33,8 @@ class EditCourseView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.change_courses'):
+        current_course = self.get_object()
+        if not self.request.user.has_perm('main.change_courses') or not current_course.coach.id == self.request.user.id:
             return HttpResponse('You must be the trainer to edit the course!')
 
         return super(EditCourseView, self).dispatch(request, *args, **kwargs)
@@ -47,7 +48,8 @@ class DeleteCourseView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     success_url = reverse_lazy("user's listings")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.delete_courses'):
+        current_course = self.get_object()
+        if not self.request.user.has_perm('main.delete_courses') or not current_course.coach.id == self.request.user.id:
             return HttpResponse('You must be the trainer to delete the course!')
 
         return super(DeleteCourseView, self).dispatch(request, *args, **kwargs)

@@ -8,6 +8,7 @@
 <form method="POST" action="{% url 'delete post' object.pk %}">
     {{ form }}
     {% csrf_token %}
+    <h1 class="courseheading">Are you sure you want to delete this POST?</h1>
     <button>Delete</button>
 </form>
 

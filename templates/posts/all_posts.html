@@ -1,22 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
+        <head>
+        <script src="https://kit.fontawesome.com/6df1cdff14.js" crossorigin="anonymous"></script>
+        <title>BookShop</title>
+        <link rel="stylesheet" href="{% static 'css/posts.css' %}">
+    </head>
 <body>
-<h1>PostWall</h1>
-<div class="expenses-container">
-        {% for post in posts %}
-            <div class="expense-container">
-            <h3>{{ post.title }}</h3>
-            <img src="{{ post.picture }}">
-                    <p>{{ post.description }}</p>
-                    <p>{{ post.likes }}</p>
-                    <p>{{ post.dislikes }}</p>
-                <p>{{ post.people_who_liked }}</p>
-                <p>{{ post.people_who_disliked }}</p>
-                    <a class="button like" href="{% url 'like post' post.pk %}">Like</a>
-                    <a class="button like" href="{% url 'dislike post' post.pk %}">Dislike</a>
-                </div>
+<h1 class="courseheading">PostWall</h1>
+
+<div class="row">
+{% for post in posts %}
+        <div class="column">
+
+            <div class="card">
+                  <div class="imgcontainer">
+                      <img src="{{ post.picture }}" alt="Denim Jeans" style="width:100%; height: 213px;">
+                  </div>
+                <h1>{{ post.title }}</h1>
+                <p class="price">By: {{ post.creator }}</p>
+                <p>Created on:{{ post.date_posted }}</p>
+                <p>{{ post.description }}</p>
+                <p>Likes: {{ post.likes }}</p>
+                <a class="postlikebutton" href="{% url 'like post' post.pk %}">Like <i class="fa-solid fa-heart"></i></a>
+{#                <p><button>Like <i class="fa-solid fa-heart"></i></button></p>#}
             </div>
-        {% endfor %}
+
+        </div>
+    {% endfor %}
+</div>
+
+
+{#                        <a class="button like" href="{% url 'like post' post.pk %}">Like</a>#}
+{#                        <a class="button like" href="{% url 'dislike post' post.pk %}">Dislike</a>#}
 
 
 </body>

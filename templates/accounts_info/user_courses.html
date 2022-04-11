@@ -1,17 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
-<h1>My Courses</h1>
-<div class="course-container">
-        {% for course in courses %}
-            <div class="course-container">
-            <h2>{{ course.name }}</h2>
-            <img src="{{ course.picture }}">
-            <p>Duration: {{ course.duration }} months</p>
-                <p>Description: {{ course.description }}</p>
-                <div class="right">
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+    <head>
+    <title>MyCourses</title>
+        <link rel="stylesheet" href="{% static 'css/user_courses.css' %}">
+    </head>
+<h1 class="courseheading">My Courses</h1>
+
+<div class="container">
+{% for course in courses %}
+  <div class="card">
+    <div class="box">
+      <div class="content">
+        <h2>Course</h2>
+        <h3>{{ course.name }}</h3>
+        <p>{{ course.description }}</p>
+        <a href="{{ course.link_to_platform }}">Join Session</a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
 </div>
+
+{#<div class="course-container">#}
+{#        {% for course in courses %}#}
+{#            <div class="course-container">#}
+{#            <h2>{{ course.name }}</h2>#}
+{#            <img src="{{ course.picture }}">#}
+{#            <p>Duration: {{ course.duration }} months</p>#}
+{#                <p>Description: {{ course.description }}</p>#}
+{#                <div class="right">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        {% endfor %}#}
+{#</div>#}
 {% endblock %}

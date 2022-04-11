@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <body>
-        <h1>This is home page view</h1>
-{#    {% endif %}#}
-{#    <p><a href="{% url 'register user' %}">Register</a></p>#}
-{#    <p><a href="{% url 'login user' %}">Login</a></p>#}
-{#    <p><a href="{% url 'logout user' %}">Logout</a></p>#}
-{#    {% if perms.Trainers.add_courses %}#}
-{#    <p><a href="{% url 'create course' %}">CreateCourse</a></p>#}
-{#    {% endif %}#}
+        <h1 class="courseheading">Welcome to</h1>
+<div class="ImageContainer">
+    <img src="{% static 'images/Logo_ 4.gif' %}" alt="headphones" height="750" width="750">
+</div>
 </body>
 {% endblock %}

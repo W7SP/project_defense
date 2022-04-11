@@ -10,11 +10,15 @@
 <div class="flip-card">
   <div class="flip-card-inner">
     <div class="flip-card-front">
-      <img src="{{ profile.picture }}" alt="Avatar" style="width:400px;height:400px;">
+        {% if profile.picture %}
+            <img src="{{ profile.picture }}" alt="Your Picture Didn't Load" style="width:400px;height:400px;">
+        {% else %}
+            <img src="{% static 'images/prof_image.png' %}" alt="Your Picture Didn't Load" style="width:400px;height:400px;">
+        {% endif %}
     </div>
     <div class="flip-card-back">
       <h1>{{ profile.full_name }}</h1>
-      <p>Architect & Engineer</p>
+      <p>{{ job }}</p>
         <div class="btn-group">
             <a class="mya" href="{% url 'edit user' request.user.pk %}">EditUser</a>
             <a class="mya" href="{% url 'delete user' request.user.pk %}">DeleteUser</a>

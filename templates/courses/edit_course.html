@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
     <title>EditCourse</title>
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
 </head>
 <body>
 <form method="POST" action="{% url 'edit course' object.pk %}">

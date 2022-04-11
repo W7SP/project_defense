@@ -21,6 +21,8 @@ class Courses(models.Model):
 
     duration = models.IntegerField()
 
+    link_to_platform = models.URLField()
+
     coach = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE,
@@ -39,6 +41,8 @@ class Equipment(models.Model):
     name = models.CharField(
         max_length=EQUIPMENT_NAME_MAX_LENGTH,
     )
+
+    picture = models.URLField()
 
     price = models.IntegerField()
 
@@ -67,7 +71,11 @@ class StudyBook(models.Model):
 
     price = models.IntegerField()
 
+    cover = models.URLField()
+
     description = models.TextField()
+
+    link_to_online_book = models.URLField()
 
     author = models.ForeignKey(
         UserModel,
@@ -102,7 +110,7 @@ class Post(models.Model):
         default=0,
     )
 
-    people_who_liked = []
+    people_who_liked = {}
 
     people_who_disliked = []
 

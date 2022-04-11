@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
     <title>CreatePost</title>
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
 </head>
 <body>
+<h1 class="courseheading">Create your post</h1>
 <form method="POST" action="{% url 'create post'%}">
     {{ form }}
     {% csrf_token %}

@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Edit Profile Information</title>
+    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
 </head>
 <body>
-<form method="POST" action="{% url 'edit user' request.user.pk %}">
+<form class="editprofile" method="POST" action="{% url 'edit user' request.user.pk %}">
     {{ form }}
     {% csrf_token %}
     <button>Edit</button>

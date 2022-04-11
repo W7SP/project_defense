@@ -27,8 +27,9 @@ class EditPostView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     success_url = reverse_lazy("index")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user == self.object.creator:
-            return HttpResponse('You must be the trainer to edit the equipment!')
+        current_post = self.get_object()
+        if not self.request.user == current_post.creator:
+            return HttpResponse('You must be the creator to edit the post!')
 
         return super(EditPostView, self).dispatch(request, *args, **kwargs)
 
@@ -41,8 +42,9 @@ class DeletePostView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     success_url = reverse_lazy("index")
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user == self.object.creator:
-            return HttpResponse('You must be the trainer to edit the equipment!')
+        current_post = self.get_object()
+        if not self.request.user == current_post.creator:
+            return HttpResponse('You must be the creator to delete the post!')
 
         return super(DeletePostView, self).dispatch(request, *args, **kwargs)
 
@@ -54,23 +56,48 @@ class ShowPostsView(views.ListView):
     context_object_name = 'posts'
 
 
+# Show User's posts
+class ShowUserPostsView(views.ListView):
+    model = Post
+    template_name = 'accounts_info/user_posts.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        courses = list(Post.objects.filter(creator=user_id))
+        return courses
+
+
 # Like Post
 def like_post(request, pk):
     post = Post.objects.get(pk=pk)
+    post_id = post.id
     user = request.user
-    if user in post.people_who_disliked:
-        post.people_who_disliked.remove(user)
-        post.people_who_liked.append(user)
-        if post.dislikes >= 0:
-            post.dislikes -= 1
-        post.likes += 1
-    elif user not in post.people_who_liked:
-        post.people_who_liked.append(user)
-        post.likes += 1
+    if post_id not in post.people_who_liked:
+        post.people_who_liked[post_id] = []
 
-    elif user in post.people_who_liked:
-        post.people_who_liked.remove(user)
+    if user not in post.people_who_liked[post_id]:
+        post.likes += 1
+        post.people_who_liked[post_id].append(user)
+    else:
         post.likes -= 1
+        post.people_who_liked[post_id].remove(user)
+
+
+    # if not user in
+    # if user in post.people_who_disliked:
+    #     post.people_who_disliked.remove(user)
+    #     post.people_who_liked.append(user)
+    #     if post.dislikes >= 0:
+    #         post.dislikes -= 1
+    #     post.likes += 1
+    # elif user not in post.people_who_liked:
+    #     post.people_who_liked.append(user)
+    #     post.likes += 1
+    #
+    # elif user in post.people_who_liked:
+    #     post.people_who_liked.remove(user)
+    #     post.likes -= 1
 
     post.save()
 
