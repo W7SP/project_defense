@@ -60,6 +60,20 @@ footer {
     background-blend-mode: lighten;
 }
 
+.text {
+    font-family: Lato, Serif;
+    font-size: 20px;
+    padding-left: 350px;
+    padding-right: 350px;
+}
+
+.map, iframe {
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    background-color: #777;
+}
+
 /*img {*/
 /*    padding: 500px;*/
 /*    position: center;*/
