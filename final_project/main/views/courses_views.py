@@ -2,6 +2,8 @@ from django.contrib.auth import mixins as auth_mixins
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.views.decorators.cache import cache_page
+
 from final_project.accounts.models import Profile
 from final_project.main.models import Courses
 from final_project.main.views.generic_views import RedirectToIndexView
@@ -56,6 +58,8 @@ class DeleteCourseView(auth_mixins.LoginRequiredMixin, views.DeleteView):
 
 
 # Show Course Shop items
+# Cache for 5 minutes
+# @cache_page(5 * 60)
 class CoursesShopView(views.ListView):
     model = Courses
     template_name = 'marketplace/courses_shop.html'
@@ -69,8 +73,8 @@ class BuyCourseView(views.UpdateView):
     template_name = 'marketplace/buy_course.html'
     success_url = reverse_lazy('index')
 
-    def get(self, *args, **kwargs):
-        result = super().get(*args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        result = super().post(self, *args, **kwargs)
         course = self.object
         user = self.request.user.id
         profile = Profile.objects.get(user_id=user)
@@ -79,6 +83,6 @@ class BuyCourseView(views.UpdateView):
             profile.save()
             course.participants.add(profile)
         else:
-            return HttpResponse('u poor')
+            return HttpResponse('You can\'t afford to buy this course!')
 
         return result

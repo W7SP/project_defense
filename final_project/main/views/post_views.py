@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.views.decorators.cache import cache_page
+
 from final_project.accounts.models import Profile
-from final_project.main.models import Equipment, Post
+from final_project.main.models import Post
 
 
 # Create New Post
@@ -25,6 +27,9 @@ class EditPostView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     fields = ('title', 'picture', 'description',)
     template_name = 'posts/edit_post.html'
     success_url = reverse_lazy("index")
+
+    def post(self, request, *args, **kwargs):
+        return super().post(self, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         current_post = self.get_object()
@@ -50,14 +55,17 @@ class DeletePostView(auth_mixins.LoginRequiredMixin, views.DeleteView):
 
 
 # Show All Posts
+# Cache for 5 minutes
+# @cache_page(5 * 60)
 class ShowPostsView(views.ListView):
     model = Post
     template_name = 'posts/all_posts.html'
     context_object_name = 'posts'
+    ordering = ['date_posted']
 
 
 # Show User's posts
-class ShowUserPostsView(views.ListView):
+class ShowUserPostsView(auth_mixins.LoginRequiredMixin, views.ListView):
     model = Post
     template_name = 'accounts_info/user_posts.html'
     context_object_name = 'posts'

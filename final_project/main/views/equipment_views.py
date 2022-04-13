@@ -2,6 +2,8 @@ from django.contrib.auth import mixins as auth_mixins
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.views.decorators.cache import cache_page
+
 from final_project.accounts.models import Profile
 from final_project.main.models import Equipment
 
@@ -55,6 +57,8 @@ class DeleteEquipmentView(auth_mixins.LoginRequiredMixin, views.DeleteView):
 
 
 # Show Equipment Shop items
+# Cache for 5 minutes
+# @cache_page(5 * 60)
 class EquipmentShopView(views.ListView):
     model = Equipment
     template_name = 'marketplace/equipment_shop.html'
@@ -68,8 +72,8 @@ class BuyEquipmentView(views.UpdateView):
     template_name = 'marketplace/buy_equipment.html'
     success_url = reverse_lazy('index')
 
-    def get(self, *args, **kwargs):
-        result = super().get(*args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        result = super().post(self, *args, **kwargs)
         equipment = self.object
         user = self.request.user.id
         profile = Profile.objects.get(user_id=user)
@@ -78,6 +82,6 @@ class BuyEquipmentView(views.UpdateView):
             profile.save()
             equipment.owners.add(profile)
         else:
-            return HttpResponse('u poor')
+            return HttpResponse('You can\'t afford to buy this equipment!')
 
         return result

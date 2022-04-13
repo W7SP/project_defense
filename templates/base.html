@@ -48,6 +48,9 @@
                         <div class="w3-dropdown-hover">
                             <button class="w3-button">Profile</button>
                             <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                {% if request.user.is_superuser %}
+                                    <a href="http://127.0.0.1:8000/admin/" class="w3-bar-item w3-button">Admin</a>
+                                {% endif %}
                                 <a href="{% url 'profile details' request.user.id %}" class="w3-bar-item w3-button">My Info</a>
                                 <a href="{% url "user's courses" %}" class="w3-bar-item w3-button">MyCourses</a>
                                 <a href="{% url "user's products" %}" class="w3-bar-item w3-button">MyProducts</a>

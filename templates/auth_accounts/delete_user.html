@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>DeleteUser</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
 <form method="post">{% csrf_token %}

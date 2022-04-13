@@ -1,7 +1,11 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
+from django.core.validators import MinLengthValidator
+
 from final_project.accounts.helpers import BootstrapFormMixin
 from final_project.accounts.models import Profile
 from django import forms
+
+from final_project.main.validators import validate_only_letters
 
 UserModel = get_user_model()
 
@@ -9,6 +13,10 @@ UserModel = get_user_model()
 class UserRegistrationForm(BootstrapFormMixin, auth_forms.UserCreationForm):
     first_name = forms.CharField(
         max_length=Profile.FIRST_NAME_MAX_LENGTH,
+        validators=(
+            MinLengthValidator(Profile.FIRST_NAME_MIN_LENGTH),
+            validate_only_letters,
+        )
     )
     last_name = forms.CharField(
         max_length=Profile.LAST_NAME_MAX_LENGTH,

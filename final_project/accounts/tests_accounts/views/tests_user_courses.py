@@ -4,28 +4,15 @@ from django import test as django_test
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from final_project.accounts.helpers import UserAndProfileData
 from final_project.accounts.models import Profile
 from final_project.main.models import Courses
 
 UserModel = get_user_model()
 
 
-class ProfileCoursesViewTests(django_test.TestCase):
+class ProfileCoursesViewTests(UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'accounts_info/user_courses.html'
-
-    VALID_USER_CREDENTIALS = {
-        'email': 'petko.adm@abv.bg',
-        'password': '123',
-    }
-
-    VALID_PROFILE_DATA = {
-        'first_name': 'Petko',
-        'last_name': 'Stankov',
-        'picture': 'http://petko.com',
-        'date_of_birth': date(2000, 4, 28),
-        'gender': 'male',
-        'account_balance': 100,
-    }
 
     VALID_COURSE_DATA = {
         'name': 'Python_Web',
@@ -72,6 +59,14 @@ class ProfileCoursesViewTests(django_test.TestCase):
         response = self.__get_response_for_profile()
 
         self.assertEqual(302, response.status_code)
+
+    # CHECK IF VIEW LOADS CORRECT TEMPLATE
+    def test_view_renders_correct_template(self):
+        user, profile = self.__create_valid_user_and_profile()
+        login_result = self.client.login(**self.VALID_USER_CREDENTIALS)
+        response = self.__get_response_for_profile()
+
+        self.assertTemplateUsed(response, self.EXPECTED_TEMPLATE)
 
     # CHECK IF VIEW SHOWS COURSES THE USER HAS BOUGHT
     def test_view_shows_courses_user_has_bought(self):

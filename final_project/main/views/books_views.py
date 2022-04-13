@@ -1,7 +1,10 @@
 from django.contrib.auth import mixins as auth_mixins
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.views.decorators.cache import cache_page
+
 from final_project.accounts.models import Profile
 from final_project.main.models import StudyBook
 
@@ -12,10 +15,15 @@ class CreateBookView(auth_mixins.LoginRequiredMixin, views.CreateView):
     fields = ('name', 'price', 'cover', 'description',)
     template_name = 'books/create_book.html'
     success_url = reverse_lazy('index')
+    PERMISSION_REQUIRED = 'main.add_studybook'
+    ERROR_MESSAGE = 'You must be an author to create a book!'
+
+    def post(self, request, *args, **kwargs):
+        return super().post(self, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.add_studybook'):
-            return HttpResponse('You must be an author to create a book!')
+        if not self.request.user.has_perm(self.PERMISSION_REQUIRED):
+            return HttpResponse(self.ERROR_MESSAGE)
 
         return super(CreateBookView, self).dispatch(request, *args, **kwargs)
 
@@ -31,10 +39,13 @@ class EditBookView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     template_name = 'books/edit_book.html'
     success_url = reverse_lazy("user's listings")
 
+    PERMISSION_REQUIRED = 'main.change_studybook'
+    ERROR_MESSAGE = 'You must be an author to create a book!'
+
     def dispatch(self, request, *args, **kwargs):
         current_book = self.get_object()
-        if not self.request.user.has_perm('main.change_studybook') or not current_book.author.id == self.request.user.id:
-            return HttpResponse('You must be the author to edit the book!')
+        if not self.request.user.has_perm(self.PERMISSION_REQUIRED) or not current_book.author.id == self.request.user.id:
+            return HttpResponse(self.ERROR_MESSAGE)
 
         return super(EditBookView, self).dispatch(request, *args, **kwargs)
 
@@ -46,15 +57,20 @@ class DeleteBookView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     template_name = 'books/delete_book.html'
     success_url = reverse_lazy("user's listings")
 
+    PERMISSION_REQUIRED = 'main.delete_studybook'
+    ERROR_MESSAGE = 'You must be an author to create a book!'
+
     def dispatch(self, request, *args, **kwargs):
         current_book = self.get_object()
-        if not self.request.user.has_perm('main.delete_studybook') or not current_book.author.id == self.request.user.id:
-            return HttpResponse('You must be the author to delete the book!')
+        if not self.request.user.has_perm(self.PERMISSION_REQUIRED) or not current_book.author.id == self.request.user.id:
+            return HttpResponse(self.ERROR_MESSAGE)
 
         return super(DeleteBookView, self).dispatch(request, *args, **kwargs)
 
 
 # Show Book Shop items
+# # Cache for 5 minutes
+# @cache_page(5 * 60)
 class BookShopView(views.ListView):
     model = StudyBook
     template_name = 'marketplace/books_shop.html'
@@ -68,8 +84,8 @@ class BuyBookView(views.UpdateView):
     template_name = 'marketplace/buy_book.html'
     success_url = reverse_lazy('index')
 
-    def get(self, *args, **kwargs):
-        result = super().get(*args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        result = super().post(self, *args, **kwargs)
         book = self.object
         user = self.request.user.id
         profile = Profile.objects.get(user_id=user)
@@ -78,6 +94,20 @@ class BuyBookView(views.UpdateView):
             profile.save()
             book.owners.add(profile)
         else:
-            return HttpResponse('u poor')
+            return HttpResponse('You can\'t afford to buy this book')
 
         return result
+
+"""    # def get(self, *args, **kwargs):
+    #     result = super().get(*args, **kwargs)
+    #     book = self.object
+    #     user = self.request.user.id
+    #     profile = Profile.objects.get(user_id=user)
+    #     if profile.account_balance >= book.price:
+    #         profile.account_balance -= book.price
+    #         profile.save()
+    #         book.owners.add(profile)
+    #     else:
+    #         return HttpResponse('You can\'t afford to buy this book')
+    #
+    #     return result"""

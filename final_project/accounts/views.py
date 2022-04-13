@@ -47,6 +47,12 @@ class DeleteUserView(LoginRequiredMixin, views.DeleteView):
     template_name = 'auth_accounts/delete_user.html'
     success_url = reverse_lazy('index')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.id == kwargs['pk']:
+            return redirect('index')
+
+        return super(DeleteUserView, self).dispatch(request, *args, **kwargs)
+
 
 # Edit User Profile Info
 class EditUserView(LoginRequiredMixin, views.UpdateView):
@@ -54,6 +60,12 @@ class EditUserView(LoginRequiredMixin, views.UpdateView):
     fields = ('first_name', 'last_name', 'picture', 'date_of_birth', 'gender',)
     template_name = 'auth_accounts/edit_user.html'
     success_url = reverse_lazy('index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.id == kwargs['pk']:
+            return redirect('index')
+
+        return super(EditUserView, self).dispatch(request, *args, **kwargs)
 
 
 # View Profile Info and Details
