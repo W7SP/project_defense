@@ -23,22 +23,45 @@ class PostLikesTests(ValidPostData, UserAndProfileData, django_test.TestCase):
 
         return user, profile
 
-    def __create_post_view(self):
-        return Post.objects.create(**self.VALID_POST_DATA)
+    def __create_post_view(self, creator):
+        return Post.objects.create(**self.VALID_POST_DATA, creator=creator)
 
     def __get_response_for_profile(self, post):
         return self.client.get(reverse('like post', kwargs={'pk': post.pk}))
 
-    # def test_view_increases_likes_correctly(self):
-    #     user, profile = self.__create_valid_user_and_profile()
-    #     self.client.login(**self.VALID_USER_CREDENTIALS)
-    #     post = self.__create_post_view(user)
-    #     self.client.post(
-    #         reverse('edit post', kwargs={'pk': post.pk}),
-    #         data={
-    #             'title': 'editedtitle',
-    #             'picture': 'http://petko.com',
-    #             'description': 'post description',
-    #             'creator': profile,
-    #         }
-    #     )
+    def __post_response_for_view(self, post):
+        return self.client.post(
+            reverse('like post', kwargs={'pk': post.pk}),
+            data={**self.VALID_POST_DATA}
+        )
+
+    def test_view_user_can_like_post_once__if_liked_twice_likes_do_not_change_correctly(self):
+        post_creator = self.__create_user(**{
+                                            'email': 'creator.adm@abv.bg',
+                                            'password': '1234',
+                                            })
+        post = self.__create_post_view(post_creator)
+
+        user, profile = self.__create_valid_user_and_profile()
+        self.client.login(**self.VALID_USER_CREDENTIALS)
+
+        """first like"""
+        self.__post_response_for_view(post)
+        post = Post.objects.get(pk=post.pk)
+
+        """check if likes increase +1 when user likes first time"""
+        expected_likes = 1
+        actual_likes = post.likes
+        self.assertEqual(expected_likes, actual_likes)
+
+        """second like"""
+        self.__post_response_for_view(post)
+        post = Post.objects.get(pk=post.pk)
+        expected_likes = 0
+        actual_likes = post.likes
+        self.assertEqual(expected_likes, actual_likes)
+
+
+
+
+

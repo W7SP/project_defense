@@ -13,11 +13,11 @@ class CreateEquipmentView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Equipment
     fields = ('name', 'price', 'description', 'picture', 'warranty',)
     template_name = 'equipment/create_equipment.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('equipment shop')
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.has_perm('main.add_courses'):
-            return HttpResponse('You must be a trainer to create new courses!')
+        if not self.request.user.has_perm('main.add_equipment'):
+            return HttpResponse('You must be a coach to create new courses!')
 
         return super(CreateEquipmentView, self).dispatch(request, *args, **kwargs)
 
@@ -36,12 +36,12 @@ class EditEquipmentView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     def dispatch(self, request, *args, **kwargs):
         current_equipment = self.get_object()
         if not self.request.user.has_perm('main.change_equipment') or not current_equipment.seller.id == self.request.user.id:
-            return HttpResponse('You must be the trainer to edit the equipment!')
+            return HttpResponse('You must be the coach to edit the equipment!')
 
         return super(EditEquipmentView, self).dispatch(request, *args, **kwargs)
 
 
-# Delete Equipment View (requires Author's permissions)
+# Delete Equipment View (requires Coach's permissions)
 class DeleteEquipmentView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     model = Equipment
     fields = ()
@@ -51,7 +51,7 @@ class DeleteEquipmentView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     def dispatch(self, request, *args, **kwargs):
         current_equipment = self.get_object()
         if not self.request.user.has_perm('main.delete_equipment') or not current_equipment.seller.id == self.request.user.id:
-            return HttpResponse('You must be the trainer to delete the equipment!')
+            return HttpResponse('You must be the coach to delete the equipment!')
 
         return super(DeleteEquipmentView, self).dispatch(request, *args, **kwargs)
 
@@ -63,6 +63,7 @@ class EquipmentShopView(views.ListView):
     model = Equipment
     template_name = 'marketplace/equipment_shop.html'
     context_object_name = 'equipments'
+    ordering = ['name']
 
 
 # Buy Equipment
@@ -70,7 +71,7 @@ class BuyEquipmentView(views.UpdateView):
     model = Equipment
     fields = ()
     template_name = 'marketplace/buy_equipment.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('equipment shop')
 
     def post(self, request, *args, **kwargs):
         result = super().post(self, *args, **kwargs)
@@ -81,6 +82,11 @@ class BuyEquipmentView(views.UpdateView):
             profile.account_balance -= equipment.price
             profile.save()
             equipment.owners.add(profile)
+
+            seller_id = equipment.seller.id
+            seller = Profile.objects.get(pk=seller_id)
+            seller.account_balance += equipment.price
+            seller.save()
         else:
             return HttpResponse('You can\'t afford to buy this equipment!')
 

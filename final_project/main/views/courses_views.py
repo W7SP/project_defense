@@ -14,7 +14,7 @@ class CreateCourseView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Courses
     fields = ('name', 'price', 'description', 'duration', 'picture', 'link_to_platform',)
     template_name = 'courses/create_course.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('courses shop')
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.has_perm('main.add_courses'):
@@ -64,6 +64,7 @@ class CoursesShopView(views.ListView):
     model = Courses
     template_name = 'marketplace/courses_shop.html'
     context_object_name = 'courses'
+    ordering = ['name']
 
 
 # Buy Course
@@ -71,7 +72,7 @@ class BuyCourseView(views.UpdateView):
     model = Courses
     fields = ()
     template_name = 'marketplace/buy_course.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('courses shop')
 
     def post(self, request, *args, **kwargs):
         result = super().post(self, *args, **kwargs)
@@ -82,6 +83,11 @@ class BuyCourseView(views.UpdateView):
             profile.account_balance -= course.price
             profile.save()
             course.participants.add(profile)
+
+            seller_id = course.coach.id
+            seller = Profile.objects.get(pk=seller_id)
+            seller.account_balance += course.price
+            seller.save()
         else:
             return HttpResponse('You can\'t afford to buy this course!')
 

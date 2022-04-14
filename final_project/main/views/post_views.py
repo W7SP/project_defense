@@ -14,7 +14,7 @@ class CreatePostView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = Post
     fields = ('title', 'picture', 'description',)
     template_name = 'posts/create_post.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('show all posts')
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
@@ -26,7 +26,7 @@ class EditPostView(auth_mixins.LoginRequiredMixin, views.UpdateView):
     model = Post
     fields = ('title', 'picture', 'description',)
     template_name = 'posts/edit_post.html'
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("show all posts")
 
     def post(self, request, *args, **kwargs):
         return super().post(self, *args, **kwargs)
@@ -44,7 +44,7 @@ class DeletePostView(auth_mixins.LoginRequiredMixin, views.DeleteView):
     model = Post
     fields = ()
     template_name = 'posts/delete_post.html'
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("user's posts")
 
     def dispatch(self, request, *args, **kwargs):
         current_post = self.get_object()
@@ -62,6 +62,13 @@ class ShowPostsView(views.ListView):
     template_name = 'posts/all_posts.html'
     context_object_name = 'posts'
     ordering = ['date_posted']
+
+
+class ShowPostsByLikesView(views.ListView):
+    model = Post
+    template_name = 'posts/all_posts.html'
+    context_object_name = 'posts'
+    ordering = ['-likes']
 
 
 # Show User's posts
@@ -113,27 +120,27 @@ def like_post(request, pk):
 
 
 # Dislike Post
-def dislike_post(request, pk):
-    post = Post.objects.get(pk=pk)
-    user = request.user
-
-    if user in post.people_who_liked:
-        post.people_who_liked.remove(user)
-        post.people_who_disliked.append(user)
-        if post.likes >= 0:
-            post.likes -= 1
-        post.dislikes += 1
-
-    elif user not in post.people_who_disliked:
-        post.people_who_disliked.append(user)
-        post.dislikes += 1
-
-    elif user in post.people_who_disliked:
-        post.people_who_disliked.remove(user)
-        post.dislikes -= 1
-
-    post.save()
-
-    return redirect('show all posts')
+# def dislike_post(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     user = request.user
+#
+#     if user in post.people_who_liked:
+#         post.people_who_liked.remove(user)
+#         post.people_who_disliked.append(user)
+#         if post.likes >= 0:
+#             post.likes -= 1
+#         post.dislikes += 1
+#
+#     elif user not in post.people_who_disliked:
+#         post.people_who_disliked.append(user)
+#         post.dislikes += 1
+#
+#     elif user in post.people_who_disliked:
+#         post.people_who_disliked.remove(user)
+#         post.dislikes -= 1
+#
+#     post.save()
+#
+#     return redirect('show all posts')
 
 

@@ -8,7 +8,7 @@ from final_project.accounts.forms import UserRegistrationForm
 from django.contrib.auth import views as auth_views
 from django.views import generic as views
 from django.contrib.auth import login
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from final_project.accounts.models import AppUser, Profile
 from final_project.main.models import Courses, Equipment, StudyBook
 
@@ -38,14 +38,14 @@ class UserLoginView(auth_views.LoginView):
 # Logout
 class UserLogoutView(auth_views.LogoutView):
     def get_next_page(self):
-        return reverse_lazy('index')
+        return reverse_lazy('login user')
 
 
 # Delete User
 class DeleteUserView(LoginRequiredMixin, views.DeleteView):
     model = AppUser
     template_name = 'auth_accounts/delete_user.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('register user')
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.id == kwargs['pk']:
@@ -59,7 +59,10 @@ class EditUserView(LoginRequiredMixin, views.UpdateView):
     model = Profile
     fields = ('first_name', 'last_name', 'picture', 'date_of_birth', 'gender',)
     template_name = 'auth_accounts/edit_user.html'
-    success_url = reverse_lazy('index')
+
+    def get_success_url(self):
+        # print(self.pk)
+        return reverse('profile details', kwargs={'pk': self.object.pk})
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.id == kwargs['pk']:

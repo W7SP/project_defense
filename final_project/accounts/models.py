@@ -27,7 +27,7 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
 
 class Profile(models.Model):
-    FIRST_NAME_MIN_LENGTH = 5
+    FIRST_NAME_MIN_LENGTH = 3
     FIRST_NAME_MAX_LENGTH = 30
     LAST_NAME_MIN_LENGTH = 5
     LAST_NAME_MAX_LENGTH = 30

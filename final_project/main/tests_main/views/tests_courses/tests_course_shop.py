@@ -12,15 +12,6 @@ UserModel = get_user_model()
 class CourseShopTests(UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'marketplace/courses_shop.html'
 
-    VALID_COURSE_DATA = {
-        'name': 'Python_Web',
-        'price': 100,
-        'description': 'The best python web framework course',
-        'picture': 'http://petko.com',
-        'duration': 4,
-        'link_to_platform': 'https://youtu.be/iqLlvbaH30g',
-    }
-
     def __create_user(self, **credentials):
         return UserModel.objects.create_user(**credentials)
 

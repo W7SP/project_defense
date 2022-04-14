@@ -14,7 +14,7 @@ class CreateBookView(auth_mixins.LoginRequiredMixin, views.CreateView):
     model = StudyBook
     fields = ('name', 'price', 'cover', 'description',)
     template_name = 'books/create_book.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('book shop')
     PERMISSION_REQUIRED = 'main.add_studybook'
     ERROR_MESSAGE = 'You must be an author to create a book!'
 
@@ -75,6 +75,7 @@ class BookShopView(views.ListView):
     model = StudyBook
     template_name = 'marketplace/books_shop.html'
     context_object_name = 'books'
+    ordering = ['name']
 
 
 # Buy Book
@@ -82,7 +83,7 @@ class BuyBookView(views.UpdateView):
     model = StudyBook
     fields = ()
     template_name = 'marketplace/buy_book.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('book shop')
 
     def post(self, request, *args, **kwargs):
         result = super().post(self, *args, **kwargs)
@@ -93,6 +94,11 @@ class BuyBookView(views.UpdateView):
             profile.account_balance -= book.price
             profile.save()
             book.owners.add(profile)
+
+            seller_id = book.author.id
+            seller = Profile.objects.get(pk=seller_id)
+            seller.account_balance += book.price
+            seller.save()
         else:
             return HttpResponse('You can\'t afford to buy this book')
 

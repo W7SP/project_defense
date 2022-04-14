@@ -7,7 +7,7 @@ from final_project.main.views.courses_views import CreateCourseView, CoursesShop
 from final_project.main.views.equipment_views import CreateEquipmentView, EquipmentShopView, BuyEquipmentView, \
     EditEquipmentView, DeleteEquipmentView
 from final_project.main.views.post_views import CreatePostView, EditPostView, DeletePostView, ShowPostsView, like_post, \
-    dislike_post
+    ShowPostsByLikesView
 
 urlpatterns = (
     # GENERIC URLS
@@ -42,7 +42,8 @@ urlpatterns = (
     path('edit/post/<int:pk>', EditPostView.as_view(), name='edit post'),
     path('delete/post/<int:pk>', DeletePostView.as_view(), name='delete post'),
     path('show/posts/', ShowPostsView.as_view(), name='show all posts'),
+    path('show/posts/by_likes/', ShowPostsByLikesView.as_view(), name='show all posts by likes'),
     path('post/like/<int:pk>/', like_post, name='like post'),
-    path('post/dislike/<int:pk>/', dislike_post, name='dislike post'),
+    # path('post/dislike/<int:pk>/', dislike_post, name='dislike post'),
 
 )

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block page_content %}
 <body>
+<h1 class="courseheading">Are you sure you want to buy this book?</h1>
 <form method="post" action="{% url 'buy book'  object.pk %}">
     {{ form }}
     {% csrf_token %}

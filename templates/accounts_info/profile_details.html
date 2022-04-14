@@ -19,6 +19,7 @@
     <div class="flip-card-back">
       <h1>{{ profile.full_name }}</h1>
       <p>{{ job }}</p>
+        <p>Account Balance: {{ profile.account_balance|floatformat:2 }}$</p>
         <div class="btn-group">
             <a class="mya" href="{% url 'edit user' request.user.pk %}">EditUser</a>
             <a class="mya" href="{% url 'delete user' request.user.pk %}">DeleteUser</a>
