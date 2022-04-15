@@ -8,20 +8,13 @@ from django.contrib.auth.models import Group, Permission
 
 from final_project.accounts.models import Profile
 from final_project.main.models import StudyBook
+from final_project.main.tests_main.views.tests_books import ValidStudyBookData
 
 UserModel = get_user_model()
 
 
-class BookShopTests(UserAndProfileData, django_test.TestCase):
+class BookShopTests(ValidStudyBookData, UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'books/create_book.html'
-
-    VALID_STUDYBOOK_DATA = {
-        'name': 'Atomic Habits',
-        'price': 10,
-        'cover': 'http://petko.com',
-        'description': 'cool book description',
-        'link_to_online_book': 'http://petko.com',
-    }
 
     def __create_user(self, **credentials):
         return UserModel.objects.create_user(**credentials)

@@ -5,11 +5,12 @@ from django.urls import reverse
 from final_project.accounts.helpers import UserAndProfileData
 from final_project.accounts.models import Profile
 from final_project.main.models import Courses
+from final_project.main.tests_main.views.tests_courses.init import ValidCourseData
 
 UserModel = get_user_model()
 
 
-class CourseShopTests(UserAndProfileData, django_test.TestCase):
+class CourseShopTests(ValidCourseData, UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'marketplace/courses_shop.html'
 
     def __create_user(self, **credentials):

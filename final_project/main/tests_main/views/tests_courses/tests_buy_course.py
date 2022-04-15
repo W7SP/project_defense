@@ -6,11 +6,12 @@ from django.urls import reverse
 from final_project.accounts.models import Profile
 from datetime import date
 
+from final_project.main.tests_main.views.tests_courses.init import ValidCourseData
 
 UserModel = get_user_model()
 
 
-class BuyCourseTests(UserAndProfileData, django_test.TestCase):
+class BuyCourseTests(ValidCourseData, UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'marketplace/buy_course.html'
 
     USER_TO_BUY_COURSE = {
@@ -25,15 +26,6 @@ class BuyCourseTests(UserAndProfileData, django_test.TestCase):
             'date_of_birth': date(2000, 4, 28),
             'gender': 'male',
             'account_balance': 100,
-    }
-
-    VALID_COURSE_DATA = {
-        'name': 'Python_Web',
-        'price': 100,
-        'description': 'The best python web framework course',
-        'picture': 'http://petko.com',
-        'duration': 4,
-        'link_to_platform': 'https://youtu.be/iqLlvbaH30g',
     }
 
     def __create_user(self, **credentials):

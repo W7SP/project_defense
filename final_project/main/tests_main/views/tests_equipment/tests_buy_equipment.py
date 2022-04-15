@@ -6,11 +6,12 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from final_project.accounts.models import Profile
 from final_project.main.models import Equipment
+from final_project.main.tests_main.views.tests_equipment.init import ValidEquipmentData
 
 UserModel = get_user_model()
 
 
-class BuyEquipmentTests(UserAndProfileData, django_test.TestCase):
+class BuyEquipmentTests(ValidEquipmentData, UserAndProfileData, django_test.TestCase):
     EXPECTED_TEMPLATE = 'marketplace/buy_equipment.html'
 
     USER_TO_BUY_EQUIPMENT = {
@@ -25,14 +26,6 @@ class BuyEquipmentTests(UserAndProfileData, django_test.TestCase):
         'date_of_birth': date(2000, 4, 28),
         'gender': 'male',
         'account_balance': 100,
-    }
-
-    VALID_EQUIPMENT_DATA = {
-        'name': 'yoga math',
-        'picture': 'http://petko.com',
-        'price': 10,
-        'description': 'epic yoga amth best buy',
-        'warranty': 2,
     }
 
     def __create_user(self, **credentials):
